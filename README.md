@@ -41,17 +41,21 @@ app.mount('#app')
 Import and use the `useLightbox` composable in your component:
 
 ```javascript
-<template>
-    <button @click="openLightbox">Open Lightbox</button>
-</template>
-
-<script setup>
 import { useLightbox } from 'vue-composable-lightbox'
+import LightboxZoomButton from '../LightboxZoomButton.vue'
+import LightboxVideo from '../LightboxVideo.vue'
+import LightboxAudio from '../LightboxAudio.vue'
 
 const { open } = useLightbox({
-    tools: [], // Add custom tool components here
-    content: {}, // Add custom content components here
-    lightboxConstructorArgs: {}, // Additional PhotoSwipe options
+    // Add custom tool components here
+    tools: [ LightboxZoomButton ], 
+    // Add custom content components here
+    content: {
+        'audio': LightboxAudio,
+        'video': LightboxVideo,
+    },
+    // Additional PhotoSwipe options
+    lightboxConstructorArgs: {}, 
 })
 
 // Example media array
@@ -80,7 +84,6 @@ const media = [
 function openLightbox() {
     open(media)
 }
-</script>
 ```
 
 ### 2. Customize the Gallery
@@ -112,12 +115,12 @@ Each media object should have the following structure:
 #### Options
 
 - `tools`: An array of Vue components to be rendered as tools in the lightbox toolbar.
-- `content`: A mapping of media types to Vue components for rendering custom content.
+- `content`: A mapping of media types to Vue components for rendering custom content. <br>eg: 'video': CustomVideoPlayer
 - `lightboxConstructorArgs`: Additional arguments for configuring the PhotoSwipe lightbox.
 
 #### Methods
 
-- `open(media: Array<any> | Object, index: number = 0)`: Opens the lightbox with the given media at an optional starting index.
+- `open(media: Array<Media> | Media, index: number = 0)`: Opens the lightbox with the given media at an optional starting index.
 
 ## License
 

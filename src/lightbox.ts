@@ -8,9 +8,19 @@ import appInstancePlugin from './plugin' // Import the app instance plugin
 
 let counter :number = 0
 
+type Media = {
+    id?: number
+    original_url: string
+    preview_url?: string
+    custom_properties?: {
+        width?: number
+        height?: number
+    },
+}
+
 interface LightboxOptions {
     tools?: Array<Component>
-    content?: { [type: string]: any }
+    content?: { [type: string]: Component }
     lightboxConstructorArgs?: Record<string, any>
 }
 
@@ -113,7 +123,9 @@ export function useLightbox(options: LightboxOptions = {
                 const bar = document.querySelector('.pswp__top-bar')
                 const closeBtn = document.querySelector('.pswp__button--close')
 
-                if (!bar || !closeBtn) return
+                if (!bar || !closeBtn) {
+                    return
+                }
 
                 const buttonContainer = document.createElement('div')
 
@@ -143,9 +155,9 @@ export function useLightbox(options: LightboxOptions = {
     }
 
     /**
-     * Loads the lightbox with the given media (image or video)
+     * Loads the lightbox with the given media
      */
-    function open(media: Array<any>|Object, index: number = 0) {
+    function open(media: Array<Media>|Media, index: number = 0) {
         const mediaVal = toValue(media)
 
         if (!mediaVal || (Array.isArray(mediaVal) && mediaVal.length === 0)) {
