@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "lib": ["ESNext", "DOM"],
+        "jsx": "preserve",
+        "declaration": true,
+        "declarationDir": "dist",
+        "outDir": "dist",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "moduleDetection": "force",
+        "baseUrl": "./src",
+        "paths": {
+            "@/*": ["*"]
+        },
+    },
+    "include": ["src", "src/**/*.vue", "shims-vue.d.ts", "src/**/*.ts", "src/**/*.d.ts"],
+    "exclude": ["node_modules", "dist"]
+  }
+  
