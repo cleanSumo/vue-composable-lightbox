@@ -7,18 +7,45 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Dependency directories
+node_modules/
+
+# Build output
+dist-ssr/
 *.local
 
 # Editor directories and files
-.vscode/*
+.vscode/
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Temp files
+*.tmp
+*.temp
+
+# Test output
+coverage/
+
+# Environment files
+.env
+.env.*.local
+
+# Ignore lockfiles (optional, depending on your workflow)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore npm pack artifacts
+*.tgz
+
+# Ignore TypeScript build artifacts
+*.tsbuildinfo
+
+# Ignore macOS system files
+Thumbs.db
