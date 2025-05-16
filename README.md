@@ -33,6 +33,19 @@ const app = createApp(App)
 app.use(VueComposableLightboxPlugin)
 app.mount('#app')
 ```
+To add default renderers you can pass an optional options object when the installing the plugin. 
+
+``` javascript
+app.use(VueComposableLightboxPlugin, {
+    // Add custom tool components here
+    tools: [ LightboxZoomButton ], 
+    // Add custom renderer components here
+    content: {
+        'audio': LightboxAudio,
+        'video': LightboxVideo,
+    },
+})
+```
 
 ## Usage
 
@@ -49,7 +62,7 @@ import LightboxAudio from '../LightboxAudio.vue'
 const { open } = useLightbox({
     // Add custom tool components here
     tools: [ LightboxZoomButton ], 
-    // Add custom content components here
+    // Add custom renderer components here
     content: {
         'audio': LightboxAudio,
         'video': LightboxVideo,
@@ -58,7 +71,7 @@ const { open } = useLightbox({
     lightboxConstructorArgs: {}, 
 })
 
-// Example media array
+// Example media array for the default image renderer
 const media = [
     {
         id: 1,
@@ -88,39 +101,67 @@ function openLightbox() {
 
 ### 2. Customize the Gallery
 
-The `Gallery` component is automatically rendered by the composable. You can customize its behavior by passing media and media types.
+You can customize the gallery's behavior by passing vue components via the content option.
 
-### Example Media Object
+### Example Media Object for default
 
-Each media object should have the following structure:
+When using the default image render each media object should have the following structure:
 
 ```typescript
 {
     id: number,
     original_url: string,
     preview_url: string,
-    custom_properties: {
+    custom_properties: { // recommended, otherwise it will render a square image at 1000x1000
         width: number,
         height: number,
     },
-    mime_type?: string, // Optional, e.g., 'image/jpeg'
     srcset?: string, // Optional, for responsive images
 }
 ```
+
+If you create your own component to render images, you are given full control over what properties are used and how. 
 
 ## API
 
 ### `useLightbox(options: LightboxOptions)`
 
-#### Options
-
-- `tools`: An array of Vue components to be rendered as tools in the lightbox toolbar.
-- `content`: A mapping of media types to Vue components for rendering custom content. <br>eg: 'video': CustomVideoPlayer
-- `lightboxConstructorArgs`: Additional arguments for configuring the PhotoSwipe lightbox.
-
 #### Methods
 
 - `open(media: Array<Media> | Media, index: number = 0)`: Opens the lightbox with the given media at an optional starting index.
+
+#### Options
+
+- `tools`: An array of Vue components to be rendered as tools in the lightbox toolbar.
+- `content`: A mapping of media types to Vue components for rendering custom content. <br>
+    note that the type mapped to the 
+- `lightboxConstructorArgs`: Additional arguments for configuring the PhotoSwipe lightbox.
+
+#### Content option
+
+When using custom components you have full control over how the data object will look. 
+The only prop that is passed to the content component is "data"; the media object passed to the open(...media) function.
+
+##### Example video player
+
+``` javascript
+<template>
+    <video
+        :poster="data.poster"
+        :src="data.src"
+    />
+</template>
+
+<script setup>
+
+const props = defineProps({
+    data: {
+        type: Object,
+        default: null,
+    },
+})
+</script>
+```
 
 ## License
 

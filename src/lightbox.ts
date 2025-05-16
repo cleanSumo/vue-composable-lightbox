@@ -1,7 +1,7 @@
 import PhotoSwipeLightbox from 'photoswipe/lightbox'
 import PhotoSwipe from 'photoswipe'
 
-import { Component, h, nextTick, render } from 'vue'
+import { Component, createElementVNode, h, nextTick, render } from 'vue'
 import { onUnmounted, ref, toValue, type Ref } from 'vue'
 import Gallery from './Gallery.vue'
 import appInstancePlugin from './plugin' // Import the app instance plugin
@@ -37,7 +37,7 @@ export function useLightbox(options: LightboxOptions = {
 
     const appInstance = appInstancePlugin.getAppInstance()
     if(!appInstance) {
-        throw new Error('VueComposableLightboxPlugin not installed!');
+        throw new Error('VueComposableLightboxPlugin not installed!')
     }
 
 
@@ -47,11 +47,10 @@ export function useLightbox(options: LightboxOptions = {
         createLightbox()
     }
 
-    function createGallery(media: any, mediaType?: string) {
+    function createGallery(media: any) {
         const gallery = h(Gallery, {
             id: id,
             media: media,
-            mediaType: mediaType,
         })
 
         render(
@@ -72,12 +71,29 @@ export function useLightbox(options: LightboxOptions = {
             },
             clickToCloseNonZoomable: false,
             ...options.lightboxConstructorArgs,
-            pswpModule: PhotoSwipe,
+            pswpModule: async () => PhotoSwipe,
         })
-        lightbox.value.init()
-
+        
+        parseItemData()
+        
         loadContentSlots()
         loadToolSlots()
+        
+        lightbox.value.init()
+    }
+
+    function parseItemData() {
+        lightbox.value?.addFilter('itemData', (itemData, index) => {
+            if(!itemData.element?.dataset){
+                return itemData
+            }
+
+            const pswpData = itemData.element!.dataset.pswpData
+            if (pswpData) {                
+              itemData.pswpData = JSON.parse(pswpData)
+            }
+            return itemData
+        })
     }
 
     function loadContentSlots() {
@@ -90,26 +106,49 @@ export function useLightbox(options: LightboxOptions = {
 
             nextTick(() => {
                 Object.entries(options.content!).forEach(([type, element]) => {
-                    // Requires you to set mediaType on the media object(s) in open(media)
+                    // Requires you to set vclType on the media object(s) in open(media)
                     if (content.type !== type) {
                         return
                     }
 
                     e.preventDefault()
 
-                    document.createElement('div')
-                    content.element.className = 'flex justify-center items-center'
+                    const container = document.createElement('div')
+                    container.className = 'flex justify-center items-center'
 
                     const component = h(element, {
-                        lightbox: lightbox,
-                        data: content.data,
+                        data: content.data.pswpData,
                     })
 
                     component.appContext = appInstance._context
 
-                    render(component, content.element)
+                    render(component, container)
+
+                    content.customElement = container
                 })
             })
+        })
+
+        // by default PhotoSwipe appends <img>,
+        // but we want to append <picture>
+        lightbox.value!.on('contentAppend', (e) => {
+            const { content } = e
+            
+            if (content.customElement && !content.customElement.parentNode) {
+                e.preventDefault()                
+                content.slide?.container.appendChild(content.customElement)
+            }
+        })
+        
+        // for next/prev navigation with <picture>
+        // by default PhotoSwipe removes <img>,
+        // but we want to remove <picture>
+        lightbox.value!.on('contentRemove', (e) => {
+            const { content } = e
+            if (content.customElement && content.customElement.parentNode) {
+                e.preventDefault()
+                content.customElement.remove()
+            }
         })
     }
 

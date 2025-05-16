@@ -9,8 +9,9 @@
                 :data-pswp-poster="item.preview_url"
                 :data-pswp-width="item.custom_properties?.width ?? 1000"
                 :data-pswp-height="item.custom_properties?.height ?? 1000"
-                :data-pswp-type="typeOf(item)"
+                :data-pswp-type="item.vclType ?? 'image'"
                 :data-pswp-srcset="item.srcset ?? null"
+                :data-pswp-data="JSON.stringify(item, null, 2)"
                 :data-cropped="true"
                 target="_blank"
                 rel="noreferrer"
@@ -37,13 +38,10 @@ type Image = {
 
 const props = defineProps<{
     id: string
-    media: Image|Array<Image>
-    mediaType?: String
+    media: any|Array<any>
 }>()
 
-const typeOf = (item: Image) => props.mediaType ?? item.mime_type?.split('/')[0] ?? 'image'
-
-const mediaArray = computed((): Array<Image> => Array.isArray(props.media) ? props.media : [props.media])
+const mediaArray = computed((): Array<any> => Array.isArray(props.media) ? props.media : [props.media])
 
 </script>
 
