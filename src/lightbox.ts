@@ -21,7 +21,13 @@ type Media = {
 interface LightboxOptions {
     tools?: Array<Component>
     content?: { [type: string]: Component }
-    lightboxConstructorArgs?: Record<string, any>
+    photoswipeConstructorArgs?: Record<string, any>
+    config?: {
+        srcKey?: string
+        posterKey?: string
+        defaultHeight: number,
+        defaultWidth: number,
+    }
 }
 
 /**
@@ -30,9 +36,9 @@ interface LightboxOptions {
 export function useLightbox(options: LightboxOptions = {
     tools: [],
     content: {},
-    lightboxConstructorArgs: {},
+    photoswipeConstructorArgs: {},
 }) {
-    const lightbox: Ref<PhotoSwipeLightbox | null> = ref(null)
+    let lightbox: PhotoSwipeLightbox | null = null
     const id = `composable-lightbox-${++counter}`
 
     const appInstance = appInstancePlugin.getAppInstance()
@@ -51,6 +57,12 @@ export function useLightbox(options: LightboxOptions = {
         const gallery = h(Gallery, {
             id: id,
             media: media,
+            config: {
+                srcKey: options.config?.srcKey ?? 'original_url',
+                posterKey: options.config?.posterKey ?? 'preview_url',
+                defaultHeight: options.config?.defaultHeight ?? 1000,
+                defaultWidth: options.config?.defaultWidth ?? 1000,
+            }
         })
 
         render(
@@ -60,7 +72,7 @@ export function useLightbox(options: LightboxOptions = {
     }
 
     function createLightbox() {
-        lightbox.value = new PhotoSwipeLightbox({
+        lightbox = new PhotoSwipeLightbox({
             gallery: '#' + id,
             children: 'a',
             padding: {
@@ -70,7 +82,7 @@ export function useLightbox(options: LightboxOptions = {
                 right: 100,
             },
             clickToCloseNonZoomable: false,
-            ...options.lightboxConstructorArgs,
+            ...options.photoswipeConstructorArgs,
             pswpModule: async () => PhotoSwipe,
         })
         
@@ -79,11 +91,12 @@ export function useLightbox(options: LightboxOptions = {
         loadContentSlots()
         loadToolSlots()
         
-        lightbox.value.init()
+        lightbox.init()
     }
 
+    // parse item data to enable it to be passed to component
     function parseItemData() {
-        lightbox.value?.addFilter('itemData', (itemData, index) => {
+        lightbox!.addFilter('itemData', (itemData, index) => {
             if(!itemData.element?.dataset){
                 return itemData
             }
@@ -97,58 +110,43 @@ export function useLightbox(options: LightboxOptions = {
     }
 
     function loadContentSlots() {
-        if (!options || !options.content) {
-            return
-        }
+        if (!options || !options.content) return
 
-        lightbox.value?.on('contentLoad', (e: any) => {
+        lightbox!.on('contentLoad', (e: any) => {
             const { content } = e
+            const comp = (options.content as any)[content.type]
+            if (!comp) return
 
-            nextTick(() => {
-                Object.entries(options.content!).forEach(([type, element]) => {
-                    // Requires you to set vclType on the media object(s) in open(media)
-                    if (content.type !== type) {
-                        return
-                    }
+            e.preventDefault()
 
-                    e.preventDefault()
+            const container = document.createElement('div')
+            container.className = 'relative flex items-center justify-center max-w-full max-h-full'
+            container.style.width = content.width + 'px'
+            container.style.height = content.height + 'px'
 
-                    const container = document.createElement('div')
-                    container.className = 'flex justify-center items-center'
-
-                    const component = h(element, {
-                        data: content.data.pswpData,
-                    })
-
-                    component.appContext = appInstance._context
-
-                    render(component, container)
-
-                    content.customElement = container
-                })
+            const component = h(comp, { 
+                data: content.data.pswpData 
             })
+            component.appContext = appInstance._context
+            render(component, container)
+
+            content.element = container
         })
 
-        // by default PhotoSwipe appends <img>,
-        // but we want to append <picture>
-        lightbox.value!.on('contentAppend', (e) => {
-            const { content } = e
-            
-            if (content.customElement && !content.customElement.parentNode) {
-                e.preventDefault()                
-                content.slide?.container.appendChild(content.customElement)
-            }
+        // Update container size on slide change / resize
+        lightbox!.on('contentResize', (e: any) => {
+            const { content, width, height } = e
+            if (!content.element) return
+
+            content.element.style.width = width + 'px'
+            content.element.style.height = height + 'px'
         })
-        
-        // for next/prev navigation with <picture>
-        // by default PhotoSwipe removes <img>,
-        // but we want to remove <picture>
-        lightbox.value!.on('contentRemove', (e) => {
+
+        // Unmount Vue to avoid leaks
+        lightbox!.on('contentRemove', (e: any) => {
             const { content } = e
-            if (content.customElement && content.customElement.parentNode) {
-                e.preventDefault()
-                content.customElement.remove()
-            }
+            if (!content.element) return
+            render(null, content.element)
         })
     }
 
@@ -157,7 +155,7 @@ export function useLightbox(options: LightboxOptions = {
             return
         }
 
-        lightbox.value?.on('uiRegister', () => {
+        lightbox!.on('uiRegister', () => {
             nextTick(() => {
                 const bar = document.querySelector('.pswp__top-bar')
                 const closeBtn = document.querySelector('.pswp__button--close')
@@ -185,12 +183,12 @@ export function useLightbox(options: LightboxOptions = {
     }
 
     function destroy() {
-        if (!lightbox.value) {
+        if (!lightbox) {
             return
         }
 
-        lightbox.value.destroy()
-        lightbox.value = null
+        lightbox.destroy()
+        lightbox = null
     }
 
     /**
@@ -207,7 +205,7 @@ export function useLightbox(options: LightboxOptions = {
 
         reRender(mediaVal)
 
-        lightbox.value?.loadAndOpen(index)
+        lightbox!.loadAndOpen(index)
     }
 
     onUnmounted(() => {

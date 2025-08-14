@@ -5,10 +5,10 @@
             :key="`${id}-gallery-item-${index}`"
         >
             <a
-                :href="item.original_url"
-                :data-pswp-poster="item.preview_url"
-                :data-pswp-width="item.custom_properties?.width ?? 1000"
-                :data-pswp-height="item.custom_properties?.height ?? 1000"
+                :href="item[config.srcKey]"
+                :data-pswp-poster="item[config.posterKey]"
+                :data-pswp-width="item.custom_properties?.width ?? config.defaultWidth"
+                :data-pswp-height="item.custom_properties?.height ?? config.defaultHeight"
                 :data-pswp-type="item.vclType ?? 'image'"
                 :data-pswp-srcset="item.srcset ?? null"
                 :data-pswp-data="JSON.stringify(item, null, 2)"
@@ -39,6 +39,12 @@ type Image = {
 const props = defineProps<{
     id: string
     media: any|Array<any>
+    config: {
+        srcKey: string
+        posterKey: string
+        defaultHeight: number
+        defaultWidth: number
+    }
 }>()
 
 const mediaArray = computed((): Array<any> => Array.isArray(props.media) ? props.media : [props.media])
