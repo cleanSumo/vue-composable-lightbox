@@ -1,45 +1,45 @@
-import O from "photoswipe";
-import { defineComponent as z, computed as F, createElementBlock as _, openBlock as E, Fragment as M, renderList as R, createElementVNode as T, ref as k, onUnmounted as $, toValue as N, h as S, render as I, nextTick as b } from "vue";
+import F from "photoswipe";
+import { defineComponent as R, computed as M, createElementBlock as v, openBlock as _, Fragment as T, renderList as k, createElementVNode as N, onUnmounted as $, toValue as W, h as S, render as y, nextTick as K } from "vue";
 /*!
   * PhotoSwipe Lightbox 5.4.4 - https://photoswipe.com
   * (c) 2024 Dmytro Semenov
   */
-function g(n, t, i) {
+function m(s, t, i) {
   const e = document.createElement(t);
-  return n && (e.className = n), i && i.appendChild(e), e;
+  return s && (e.className = s), i && i.appendChild(e), e;
 }
-function V(n, t, i) {
-  let e = `translate3d(${n}px,0px,0)`;
+function V(s, t, i) {
+  let e = `translate3d(${s}px,0px,0)`;
   return i !== void 0 && (e += ` scale3d(${i},${i},1)`), e;
 }
-function C(n, t, i) {
-  n.style.width = typeof t == "number" ? `${t}px` : t, n.style.height = typeof i == "number" ? `${i}px` : i;
+function E(s, t, i) {
+  s.style.width = typeof t == "number" ? `${t}px` : t, s.style.height = typeof i == "number" ? `${i}px` : i;
 }
-const o = {
+const p = {
   IDLE: "idle",
   LOADING: "loading",
   LOADED: "loaded",
   ERROR: "error"
 };
-function W(n) {
-  return "button" in n && n.button === 1 || n.ctrlKey || n.metaKey || n.altKey || n.shiftKey;
+function H(s) {
+  return "button" in s && s.button === 1 || s.ctrlKey || s.metaKey || s.altKey || s.shiftKey;
 }
-function y(n, t, i = document) {
+function g(s, t, i = document) {
   let e = [];
-  if (n instanceof Element)
-    e = [n];
-  else if (n instanceof NodeList || Array.isArray(n))
-    e = Array.from(n);
+  if (s instanceof Element)
+    e = [s];
+  else if (s instanceof NodeList || Array.isArray(s))
+    e = Array.from(s);
   else {
-    const s = typeof n == "string" ? n : t;
-    s && (e = Array.from(i.querySelectorAll(s)));
+    const n = typeof s == "string" ? s : t;
+    n && (e = Array.from(i.querySelectorAll(n)));
   }
   return e;
 }
-function G(n) {
-  return typeof n == "function" && n.prototype && n.prototype.goTo;
+function G(s) {
+  return typeof s == "function" && s.prototype && s.prototype.goTo;
 }
-function A() {
+function b() {
   return !!(navigator.vendor && navigator.vendor.match(/apple/i));
 }
 class Z {
@@ -54,7 +54,7 @@ class Z {
     this.defaultPrevented = !0;
   }
 }
-class H {
+class U {
   constructor() {
     this._listeners = {}, this._filters = {}, this.pswp = void 0, this.options = void 0;
   }
@@ -65,11 +65,11 @@ class H {
    * @param {number} priority
    */
   addFilter(t, i, e = 100) {
-    var s, l, r;
-    this._filters[t] || (this._filters[t] = []), (s = this._filters[t]) === null || s === void 0 || s.push({
+    var n, l, r;
+    this._filters[t] || (this._filters[t] = []), (n = this._filters[t]) === null || n === void 0 || n.push({
       fn: i,
       priority: e
-    }), (l = this._filters[t]) === null || l === void 0 || l.sort((d, c) => d.priority - c.priority), (r = this.pswp) === null || r === void 0 || r.addFilter(t, i, e);
+    }), (l = this._filters[t]) === null || l === void 0 || l.sort((c, u) => c.priority - u.priority), (r = this.pswp) === null || r === void 0 || r.addFilter(t, i, e);
   }
   /**
    * @template {keyof PhotoSwipeFiltersMap} T
@@ -87,8 +87,8 @@ class H {
    */
   applyFilters(t, ...i) {
     var e;
-    return (e = this._filters[t]) === null || e === void 0 || e.forEach((s) => {
-      i[0] = s.fn.apply(this, i);
+    return (e = this._filters[t]) === null || e === void 0 || e.forEach((n) => {
+      i[0] = n.fn.apply(this, i);
     }), i[0];
   }
   /**
@@ -97,8 +97,8 @@ class H {
    * @param {EventCallback<T>} fn
    */
   on(t, i) {
-    var e, s;
-    this._listeners[t] || (this._listeners[t] = []), (e = this._listeners[t]) === null || e === void 0 || e.push(i), (s = this.pswp) === null || s === void 0 || s.on(t, i);
+    var e, n;
+    this._listeners[t] || (this._listeners[t] = []), (e = this._listeners[t]) === null || e === void 0 || e.push(i), (n = this.pswp) === null || n === void 0 || n.on(t, i);
   }
   /**
    * @template {keyof PhotoSwipeEventsMap} T
@@ -107,7 +107,7 @@ class H {
    */
   off(t, i) {
     var e;
-    this._listeners[t] && (this._listeners[t] = this._listeners[t].filter((s) => i !== s)), (e = this.pswp) === null || e === void 0 || e.off(t, i);
+    this._listeners[t] && (this._listeners[t] = this._listeners[t].filter((n) => i !== n)), (e = this.pswp) === null || e === void 0 || e.off(t, i);
   }
   /**
    * @template {keyof PhotoSwipeEventsMap} T
@@ -119,22 +119,22 @@ class H {
     var e;
     if (this.pswp)
       return this.pswp.dispatch(t, i);
-    const s = (
+    const n = (
       /** @type {AugmentedEvent<T>} */
       new Z(t, i)
     );
     return (e = this._listeners[t]) === null || e === void 0 || e.forEach((l) => {
-      l.call(this, s);
-    }), s;
+      l.call(this, n);
+    }), n;
   }
 }
-class U {
+class j {
   /**
    * @param {string | false} imageSrc
    * @param {HTMLElement} container
    */
   constructor(t, i) {
-    if (this.element = g("pswp__img pswp__img--placeholder", t ? "img" : "div", i), t) {
+    if (this.element = m("pswp__img pswp__img--placeholder", t ? "img" : "div", i), t) {
       const e = (
         /** @type {HTMLImageElement} */
         this.element
@@ -148,21 +148,21 @@ class U {
    * @param {number} height
    */
   setDisplayedSize(t, i) {
-    this.element && (this.element.tagName === "IMG" ? (C(this.element, 250, "auto"), this.element.style.transformOrigin = "0 0", this.element.style.transform = V(0, 0, t / 250)) : C(this.element, t, i));
+    this.element && (this.element.tagName === "IMG" ? (E(this.element, 250, "auto"), this.element.style.transformOrigin = "0 0", this.element.style.transform = V(0, 0, t / 250)) : E(this.element, t, i));
   }
   destroy() {
     var t;
     (t = this.element) !== null && t !== void 0 && t.parentNode && this.element.remove(), this.element = null;
   }
 }
-class j {
+class q {
   /**
    * @param {SlideData} itemData Slide data
    * @param {PhotoSwipeBase} instance PhotoSwipe or PhotoSwipeLightbox instance
    * @param {number} index
    */
   constructor(t, i, e) {
-    this.instance = i, this.data = t, this.index = e, this.element = void 0, this.placeholder = void 0, this.slide = void 0, this.displayedImageWidth = 0, this.displayedImageHeight = 0, this.width = Number(this.data.w) || Number(this.data.width) || 0, this.height = Number(this.data.h) || Number(this.data.height) || 0, this.isAttached = !1, this.hasSlide = !1, this.isDecoding = !1, this.state = o.IDLE, this.data.type ? this.type = this.data.type : this.data.src ? this.type = "image" : this.type = "html", this.instance.dispatch("contentInit", {
+    this.instance = i, this.data = t, this.index = e, this.element = void 0, this.placeholder = void 0, this.slide = void 0, this.displayedImageWidth = 0, this.displayedImageHeight = 0, this.width = Number(this.data.w) || Number(this.data.width) || 0, this.height = Number(this.data.h) || Number(this.data.height) || 0, this.isAttached = !1, this.hasSlide = !1, this.isDecoding = !1, this.state = p.IDLE, this.data.type ? this.type = this.data.type : this.data.src ? this.type = "image" : this.type = "html", this.instance.dispatch("contentInit", {
       content: this
     });
   }
@@ -190,12 +190,12 @@ class j {
           this.data.msrc && this.slide.isFirstSlide ? this.data.msrc : !1,
           this
         );
-        this.placeholder = new U(e, this.slide.container);
+        this.placeholder = new j(e, this.slide.container);
       }
     this.element && !i || this.instance.dispatch("contentLoad", {
       content: this,
       isLazy: t
-    }).defaultPrevented || (this.isImageContent() ? (this.element = g("pswp__img", "img"), this.displayedImageWidth && this.loadImage(t)) : (this.element = g("pswp__content", "div"), this.element.innerHTML = this.data.html || ""), i && this.slide && this.slide.updateContentSize(!0));
+    }).defaultPrevented || (this.isImageContent() ? (this.element = m("pswp__img", "img"), this.displayedImageWidth && this.loadImage(t)) : (this.element = m("pswp__content", "div"), this.element.innerHTML = this.data.html || ""), i && this.slide && this.slide.updateContentSize(!0));
   }
   /**
    * Preload image
@@ -209,13 +209,13 @@ class j {
       isLazy: t
     }).defaultPrevented)
       return;
-    const s = (
+    const n = (
       /** @type HTMLImageElement */
       this.element
     );
-    this.updateSrcsetSizes(), this.data.srcset && (s.srcset = this.data.srcset), s.src = (i = this.data.src) !== null && i !== void 0 ? i : "", s.alt = (e = this.data.alt) !== null && e !== void 0 ? e : "", this.state = o.LOADING, s.complete ? this.onLoaded() : (s.onload = () => {
+    this.updateSrcsetSizes(), this.data.srcset && (n.srcset = this.data.srcset), n.src = (i = this.data.src) !== null && i !== void 0 ? i : "", n.alt = (e = this.data.alt) !== null && e !== void 0 ? e : "", this.state = p.LOADING, n.complete ? this.onLoaded() : (n.onload = () => {
       this.onLoaded();
-    }, s.onerror = () => {
+    }, n.onerror = () => {
       this.onError();
     });
   }
@@ -231,16 +231,16 @@ class j {
    * Content load success handler
    */
   onLoaded() {
-    this.state = o.LOADED, this.slide && this.element && (this.instance.dispatch("loadComplete", {
+    this.state = p.LOADED, this.slide && this.element && (this.instance.dispatch("loadComplete", {
       slide: this.slide,
       content: this
-    }), this.slide.isActive && this.slide.heavyAppended && !this.element.parentNode && (this.append(), this.slide.updateContentSize(!0)), (this.state === o.LOADED || this.state === o.ERROR) && this.removePlaceholder());
+    }), this.slide.isActive && this.slide.heavyAppended && !this.element.parentNode && (this.append(), this.slide.updateContentSize(!0)), (this.state === p.LOADED || this.state === p.ERROR) && this.removePlaceholder());
   }
   /**
    * Content load error handler
    */
   onError() {
-    this.state = o.ERROR, this.slide && (this.displayError(), this.instance.dispatch("loadComplete", {
+    this.state = p.ERROR, this.slide && (this.displayError(), this.instance.dispatch("loadComplete", {
       slide: this.slide,
       isError: !0,
       content: this
@@ -253,13 +253,13 @@ class j {
    * @returns {Boolean} If the content is currently loading
    */
   isLoading() {
-    return this.instance.applyFilters("isContentLoading", this.state === o.LOADING, this);
+    return this.instance.applyFilters("isContentLoading", this.state === p.LOADING, this);
   }
   /**
    * @returns {Boolean} If the content is in error state
    */
   isError() {
-    return this.state === o.ERROR;
+    return this.state === p.ERROR;
   }
   /**
    * @returns {boolean} If the content is image
@@ -278,7 +278,7 @@ class j {
       content: this,
       width: t,
       height: i
-    }).defaultPrevented && (C(this.element, t, i), this.isImageContent() && !this.isError()))) {
+    }).defaultPrevented && (E(this.element, t, i), this.isImageContent() && !this.isError()))) {
       const e = !this.displayedImageWidth && t;
       this.displayedImageWidth = t, this.displayedImageHeight = i, e ? this.loadImage(!1) : this.updateSrcsetSizes(), this.slide && this.instance.dispatch("imageSizeChange", {
         slide: this.slide,
@@ -292,7 +292,7 @@ class j {
    * @returns {boolean} If the content can be zoomed
    */
   isZoomable() {
-    return this.instance.applyFilters("isContentZoomable", this.isImageContent() && this.state !== o.ERROR, this);
+    return this.instance.applyFilters("isContentZoomable", this.isImageContent() && this.state !== p.ERROR, this);
   }
   /**
    * Update image srcset sizes attribute based on width and height
@@ -340,9 +340,9 @@ class j {
   displayError() {
     if (this.slide) {
       var t, i;
-      let e = g("pswp__error-msg", "div");
+      let e = m("pswp__error-msg", "div");
       e.innerText = (t = (i = this.instance.options) === null || i === void 0 ? void 0 : i.errorMsg) !== null && t !== void 0 ? t : "", e = /** @type {HTMLDivElement} */
-      this.instance.applyFilters("contentErrorElement", e, this), this.element = g("pswp__content pswp__error-msg-container", "div"), this.element.appendChild(e), this.slide.container.innerText = "", this.slide.container.appendChild(this.element), this.slide.updateContentSize(!0), this.removePlaceholder();
+      this.instance.applyFilters("contentErrorElement", e, this), this.element = m("pswp__content pswp__error-msg-container", "div"), this.element.appendChild(e), this.slide.container.innerText = "", this.slide.container.appendChild(this.element), this.slide.updateContentSize(!0), this.removePlaceholder();
     }
   }
   /**
@@ -351,7 +351,7 @@ class j {
   append() {
     if (this.isAttached || !this.element)
       return;
-    if (this.isAttached = !0, this.state === o.ERROR) {
+    if (this.isAttached = !0, this.state === p.ERROR) {
       this.displayError();
       return;
     }
@@ -360,7 +360,7 @@ class j {
     }).defaultPrevented)
       return;
     const t = "decode" in this.element;
-    this.isImageContent() ? t && this.slide && (!this.slide.isActive || A()) ? (this.isDecoding = !0, this.element.decode().catch(() => {
+    this.isImageContent() ? t && this.slide && (!this.slide.isActive || b()) ? (this.isDecoding = !0, this.element.decode().catch(() => {
     }).finally(() => {
       this.isDecoding = !1, this.appendImage();
     })) : this.appendImage() : this.slide && !this.element.parentNode && this.slide.container.appendChild(this.element);
@@ -373,7 +373,7 @@ class j {
   activate() {
     this.instance.dispatch("contentActivate", {
       content: this
-    }).defaultPrevented || !this.slide || (this.isImageContent() && this.isDecoding && !A() ? this.appendImage() : this.isError() && this.load(!1, !0), this.slide.holderElement && this.slide.holderElement.setAttribute("aria-hidden", "false"));
+    }).defaultPrevented || !this.slide || (this.isImageContent() && this.isDecoding && !b() ? this.appendImage() : this.isError() && this.load(!1, !0), this.slide.holderElement && this.slide.holderElement.setAttribute("aria-hidden", "false"));
   }
   /**
    * Deactivate the content
@@ -397,12 +397,12 @@ class j {
   appendImage() {
     this.isAttached && (this.instance.dispatch("contentAppendImage", {
       content: this
-    }).defaultPrevented || (this.slide && this.element && !this.element.parentNode && this.slide.container.appendChild(this.element), (this.state === o.LOADED || this.state === o.ERROR) && this.removePlaceholder()));
+    }).defaultPrevented || (this.slide && this.element && !this.element.parentNode && this.slide.container.appendChild(this.element), (this.state === p.LOADED || this.state === p.ERROR) && this.removePlaceholder()));
   }
 }
-function K(n, t) {
-  if (n.getViewportSizeFn) {
-    const i = n.getViewportSizeFn(n, t);
+function B(s, t) {
+  if (s.getViewportSizeFn) {
+    const i = s.getViewportSizeFn(s, t);
     if (i)
       return i;
   }
@@ -415,34 +415,34 @@ function K(n, t) {
     y: window.innerHeight
   };
 }
-function v(n, t, i, e, s) {
+function w(s, t, i, e, n) {
   let l = 0;
   if (t.paddingFn)
-    l = t.paddingFn(i, e, s)[n];
+    l = t.paddingFn(i, e, n)[s];
   else if (t.padding)
-    l = t.padding[n];
+    l = t.padding[s];
   else {
-    const r = "padding" + n[0].toUpperCase() + n.slice(1);
+    const r = "padding" + s[0].toUpperCase() + s.slice(1);
     t[r] && (l = t[r]);
   }
   return Number(l) || 0;
 }
-function q(n, t, i, e) {
+function J(s, t, i, e) {
   return {
-    x: t.x - v("left", n, t, i, e) - v("right", n, t, i, e),
-    y: t.y - v("top", n, t, i, e) - v("bottom", n, t, i, e)
+    x: t.x - w("left", s, t, i, e) - w("right", s, t, i, e),
+    y: t.y - w("top", s, t, i, e) - w("bottom", s, t, i, e)
   };
 }
-const L = 4e3;
-class B {
+const A = 4e3;
+class X {
   /**
    * @param {PhotoSwipeOptions} options PhotoSwipe options
    * @param {SlideData} itemData Slide data
    * @param {number} index Slide index
    * @param {PhotoSwipe} [pswp] PhotoSwipe instance, can be undefined if not initialized yet
    */
-  constructor(t, i, e, s) {
-    this.pswp = s, this.options = t, this.itemData = i, this.index = e, this.panAreaSize = null, this.elementSize = null, this.fit = 1, this.fill = 1, this.vFill = 1, this.initial = 1, this.secondary = 1, this.max = 1, this.min = 1;
+  constructor(t, i, e, n) {
+    this.pswp = n, this.options = t, this.itemData = i, this.index = e, this.panAreaSize = null, this.elementSize = null, this.fit = 1, this.fill = 1, this.vFill = 1, this.initial = 1, this.secondary = 1, this.max = 1, this.min = 1;
   }
   /**
    * Calculate initial, secondary and maximum zoom level for the specified slide.
@@ -454,12 +454,12 @@ class B {
    * @param {Point} panAreaSize
    */
   update(t, i, e) {
-    const s = {
+    const n = {
       x: t,
       y: i
     };
-    this.elementSize = s, this.panAreaSize = e;
-    const l = e.x / s.x, r = e.y / s.y;
+    this.elementSize = n, this.panAreaSize = e;
+    const l = e.x / n.x, r = e.y / n.y;
     this.fit = Math.min(1, l < r ? l : r), this.fill = Math.min(1, l > r ? l : r), this.vFill = Math.min(1, r), this.initial = this._getInitial(), this.secondary = this._getSecondary(), this.max = Math.max(this.initial, this.secondary, this._getMax()), this.min = Math.min(this.fit, this.initial, this.secondary), this.pswp && this.pswp.dispatch("zoomLevelsUpdate", {
       zoomLevels: this,
       slideData: this.itemData
@@ -491,7 +491,7 @@ class B {
    */
   _getSecondary() {
     let t = this._parseZoomLevelOption("secondary");
-    return t || (t = Math.min(1, this.fit * 3), this.elementSize && t * this.elementSize.x > L && (t = L / this.elementSize.x), t);
+    return t || (t = Math.min(1, this.fit * 3), this.elementSize && t * this.elementSize.x > A && (t = A / this.elementSize.x), t);
   }
   /**
    * Get initial image zoom level.
@@ -514,30 +514,30 @@ class B {
     return this._parseZoomLevelOption("max") || Math.max(1, this.fit * 4);
   }
 }
-function P(n, t, i) {
-  const e = t.createContentFromData(n, i);
-  let s;
+function P(s, t, i) {
+  const e = t.createContentFromData(s, i);
+  let n;
   const {
     options: l
   } = t;
   if (l) {
-    s = new B(l, n, -1);
+    n = new X(l, s, -1);
     let r;
-    t.pswp ? r = t.pswp.viewportSize : r = K(l, t);
-    const d = q(l, r, n, i);
-    s.update(e.width, e.height, d);
+    t.pswp ? r = t.pswp.viewportSize : r = B(l, t);
+    const c = J(l, r, s, i);
+    n.update(e.width, e.height, c);
   }
-  return e.lazyLoad(), s && e.setDisplayedSize(Math.ceil(e.width * s.initial), Math.ceil(e.height * s.initial)), e;
+  return e.lazyLoad(), n && e.setDisplayedSize(Math.ceil(e.width * n.initial), Math.ceil(e.height * n.initial)), e;
 }
-function X(n, t) {
-  const i = t.getItemData(n);
+function Y(s, t) {
+  const i = t.getItemData(s);
   if (!t.dispatch("lazyLoadSlide", {
-    index: n,
+    index: s,
     itemData: i
   }).defaultPrevented)
-    return P(i, t, n);
+    return P(i, t, s);
 }
-class Y extends H {
+class Q extends U {
   /**
    * Get total number of slides
    *
@@ -548,11 +548,11 @@ class Y extends H {
     let i = 0;
     const e = (t = this.options) === null || t === void 0 ? void 0 : t.dataSource;
     e && "length" in e ? i = e.length : e && "gallery" in e && (e.items || (e.items = this._getGalleryDOMElements(e.gallery)), e.items && (i = e.items.length));
-    const s = this.dispatch("numItems", {
+    const n = this.dispatch("numItems", {
       dataSource: e,
       numItems: i
     });
-    return this.applyFilters("numItems", s.numItems, e);
+    return this.applyFilters("numItems", n.numItems, e);
   }
   /**
    * @param {SlideData} slideData
@@ -560,7 +560,7 @@ class Y extends H {
    * @returns {Content}
    */
   createContentFromData(t, i) {
-    return new j(t, this, i);
+    return new q(t, this, i);
   }
   /**
    * Get item data by index.
@@ -575,9 +575,9 @@ class Y extends H {
   getItemData(t) {
     var i;
     const e = (i = this.options) === null || i === void 0 ? void 0 : i.dataSource;
-    let s = {};
-    Array.isArray(e) ? s = e[t] : e && "gallery" in e && (e.items || (e.items = this._getGalleryDOMElements(e.gallery)), s = e.items[t]);
-    let l = s;
+    let n = {};
+    Array.isArray(e) ? n = e[t] : e && "gallery" in e && (e.items || (e.items = this._getGalleryDOMElements(e.gallery)), n = e.items[t]);
+    let l = n;
     l instanceof Element && (l = this._domElementToItemData(l));
     const r = this.dispatch("itemData", {
       itemData: l || {},
@@ -594,7 +594,7 @@ class Y extends H {
    */
   _getGalleryDOMElements(t) {
     var i, e;
-    return (i = this.options) !== null && i !== void 0 && i.children || (e = this.options) !== null && e !== void 0 && e.childSelector ? y(this.options.children, this.options.childSelector, t) || [] : [t];
+    return (i = this.options) !== null && i !== void 0 && i.children || (e = this.options) !== null && e !== void 0 && e.childSelector ? g(this.options.children, this.options.childSelector, t) || [] : [t];
   }
   /**
    * Converts DOM element to item data object.
@@ -613,8 +613,8 @@ class Y extends H {
       i.src = e.dataset.pswpSrc || e.href, e.dataset.pswpSrcset && (i.srcset = e.dataset.pswpSrcset), i.width = e.dataset.pswpWidth ? parseInt(e.dataset.pswpWidth, 10) : 0, i.height = e.dataset.pswpHeight ? parseInt(e.dataset.pswpHeight, 10) : 0, i.w = i.width, i.h = i.height, e.dataset.pswpType && (i.type = e.dataset.pswpType);
       const l = t.querySelector("img");
       if (l) {
-        var s;
-        i.msrc = l.currentSrc || l.src, i.alt = (s = l.getAttribute("alt")) !== null && s !== void 0 ? s : "";
+        var n;
+        i.msrc = l.currentSrc || l.src, i.alt = (n = l.getAttribute("alt")) !== null && n !== void 0 ? n : "";
       }
       (e.dataset.pswpCropped || e.dataset.cropped) && (i.thumbCropped = !0);
     }
@@ -631,7 +631,7 @@ class Y extends H {
     return P(t, this, i);
   }
 }
-class J extends Y {
+class tt extends Q {
   /**
    * @param {PhotoSwipeOptions} [options]
    */
@@ -643,7 +643,7 @@ class J extends Y {
    * It's not included in the main constructor, so you may bind events before it.
    */
   init() {
-    y(this.options.gallery, this.options.gallerySelector).forEach((t) => {
+    g(this.options.gallery, this.options.gallerySelector).forEach((t) => {
       t.addEventListener("click", this.onThumbnailsClick, !1);
     });
   }
@@ -651,7 +651,7 @@ class J extends Y {
    * @param {MouseEvent} e
    */
   onThumbnailsClick(t) {
-    if (W(t) || window.pswp)
+    if (H(t) || window.pswp)
       return;
     let i = {
       x: t.clientX,
@@ -660,13 +660,13 @@ class J extends Y {
     !i.x && !i.y && (i = null);
     let e = this.getClickedIndex(t);
     e = this.applyFilters("clickedIndex", e, t, this);
-    const s = {
+    const n = {
       gallery: (
         /** @type {HTMLElement} */
         t.currentTarget
       )
     };
-    e >= 0 && (t.preventDefault(), this.loadAndOpen(e, s, i));
+    e >= 0 && (t.preventDefault(), this.loadAndOpen(e, n, i));
   }
   /**
    * Get index of gallery item that was clicked.
@@ -680,13 +680,13 @@ class J extends Y {
     const i = (
       /** @type {HTMLElement} */
       t.target
-    ), s = y(
+    ), n = g(
       this.options.children,
       this.options.childSelector,
       /** @type {HTMLElement} */
       t.currentTarget
     ).findIndex((l) => l === i || l.contains(i));
-    return s !== -1 ? s : this.options.children || this.options.childSelector ? -1 : 0;
+    return n !== -1 ? n : this.options.children || this.options.childSelector ? -1 : 0;
   }
   /**
    * Load and open PhotoSwipe
@@ -700,9 +700,9 @@ class J extends Y {
     if (window.pswp || !this.options)
       return !1;
     if (!i && this.options.gallery && this.options.children) {
-      const s = y(this.options.gallery);
-      s[0] && (i = {
-        gallery: s[0]
+      const n = g(this.options.gallery);
+      n[0] && (i = {
+        gallery: n[0]
       });
     }
     return this.options.index = t, this.options.initialPointerPos = e, this.shouldOpen = !0, this.preload(t, i), !0;
@@ -718,9 +718,9 @@ class J extends Y {
       options: e
     } = this;
     i && (e.dataSource = i);
-    const s = [], l = typeof e.pswpModule;
+    const n = [], l = typeof e.pswpModule;
     if (G(e.pswpModule))
-      s.push(Promise.resolve(
+      n.push(Promise.resolve(
         /** @type {Type<PhotoSwipe>} */
         e.pswpModule
       ));
@@ -728,19 +728,19 @@ class J extends Y {
       if (l === "string")
         throw new Error("pswpModule as string is no longer supported");
       if (l === "function")
-        s.push(
+        n.push(
           /** @type {() => Promise<Type<PhotoSwipe>>} */
           e.pswpModule()
         );
       else
         throw new Error("pswpModule is not valid");
     }
-    typeof e.openPromise == "function" && s.push(e.openPromise()), e.preloadFirstSlide !== !1 && t >= 0 && (this._preloadedContent = X(t, this));
+    typeof e.openPromise == "function" && n.push(e.openPromise()), e.preloadFirstSlide !== !1 && t >= 0 && (this._preloadedContent = Y(t, this));
     const r = ++this._uid;
-    Promise.all(s).then((d) => {
+    Promise.all(n).then((c) => {
       if (this.shouldOpen) {
-        const c = d[0];
-        this._openPhotoswipe(c, r);
+        const u = c[0];
+        this._openPhotoswipe(u, r);
       }
     });
   }
@@ -753,19 +753,19 @@ class J extends Y {
     if (i !== this._uid && this.shouldOpen || (this.shouldOpen = !1, window.pswp))
       return;
     const e = typeof t == "object" ? new t.default(this.options) : new t(this.options);
-    this.pswp = e, window.pswp = e, Object.keys(this._listeners).forEach((s) => {
+    this.pswp = e, window.pswp = e, Object.keys(this._listeners).forEach((n) => {
       var l;
-      (l = this._listeners[s]) === null || l === void 0 || l.forEach((r) => {
+      (l = this._listeners[n]) === null || l === void 0 || l.forEach((r) => {
         e.on(
-          s,
+          n,
           /** @type {EventCallback<typeof name>} */
           r
         );
       });
-    }), Object.keys(this._filters).forEach((s) => {
+    }), Object.keys(this._filters).forEach((n) => {
       var l;
-      (l = this._filters[s]) === null || l === void 0 || l.forEach((r) => {
-        e.addFilter(s, r.fn, r.priority);
+      (l = this._filters[n]) === null || l === void 0 || l.forEach((r) => {
+        e.addFilter(n, r.fn, r.priority);
       });
     }), this._preloadedContent && (e.contentLoader.addToCache(this._preloadedContent), this._preloadedContent = void 0), e.on("destroy", () => {
       this.pswp = void 0, delete window.pswp;
@@ -776,79 +776,90 @@ class J extends Y {
    */
   destroy() {
     var t;
-    (t = this.pswp) === null || t === void 0 || t.destroy(), this.shouldOpen = !1, this._listeners = {}, y(this.options.gallery, this.options.gallerySelector).forEach((i) => {
+    (t = this.pswp) === null || t === void 0 || t.destroy(), this.shouldOpen = !1, this._listeners = {}, g(this.options.gallery, this.options.gallerySelector).forEach((i) => {
       i.removeEventListener("click", this.onThumbnailsClick, !1);
     });
   }
 }
-const Q = ["id"], tt = ["href", "data-pswp-poster", "data-pswp-width", "data-pswp-height", "data-pswp-type", "data-pswp-srcset"], et = /* @__PURE__ */ z({
+const et = ["id"], it = ["href", "data-pswp-poster", "data-pswp-width", "data-pswp-height", "data-pswp-type", "data-pswp-srcset", "data-pswp-data"], st = /* @__PURE__ */ R({
   __name: "Gallery",
   props: {
     id: {},
     media: {},
-    mediaType: {}
+    config: {}
   },
-  setup(n) {
-    const t = n, i = (s) => {
-      var l;
-      return t.mediaType ?? ((l = s.mime_type) == null ? void 0 : l.split("/")[0]) ?? "image";
-    }, e = F(() => Array.isArray(t.media) ? t.media : [t.media]);
-    return (s, l) => (E(), _("div", { id: s.id }, [
-      (E(!0), _(M, null, R(e.value, (r, d) => {
-        var c, f;
-        return E(), _("div", {
-          key: `${s.id}-gallery-item-${d}`
+  setup(s) {
+    const t = s, i = M(() => Array.isArray(t.media) ? t.media : [t.media]);
+    return (e, n) => (_(), v("div", { id: e.id }, [
+      (_(!0), v(T, null, k(i.value, (l, r) => {
+        var c, u;
+        return _(), v("div", {
+          key: `${e.id}-gallery-item-${r}`
         }, [
-          T("a", {
-            href: r.original_url,
-            "data-pswp-poster": r.preview_url,
-            "data-pswp-width": ((c = r.custom_properties) == null ? void 0 : c.width) ?? 1e3,
-            "data-pswp-height": ((f = r.custom_properties) == null ? void 0 : f.height) ?? 1e3,
-            "data-pswp-type": i(r),
-            "data-pswp-srcset": r.srcset ?? null,
+          N("a", {
+            href: l[e.config.srcKey],
+            "data-pswp-poster": l[e.config.posterKey],
+            "data-pswp-width": ((c = l.custom_properties) == null ? void 0 : c.width) ?? e.config.defaultWidth,
+            "data-pswp-height": ((u = l.custom_properties) == null ? void 0 : u.height) ?? e.config.defaultHeight,
+            "data-pswp-type": l.vclType ?? "image",
+            "data-pswp-srcset": l.srcset ?? null,
+            "data-pswp-data": JSON.stringify(l, null, 2),
             "data-cropped": !0,
             target: "_blank",
             rel: "noreferrer"
-          }, null, 8, tt)
+          }, null, 8, it)
         ]);
       }), 128))
-    ], 8, Q));
+    ], 8, et));
   }
 });
-let D;
-const it = {
-  install(n) {
-    D = n;
+let D, L, x;
+const nt = {
+  install(s, t) {
+    t && (L = t.renderers, x = t.tools), D = s;
   },
   getAppInstance() {
     return D;
+  },
+  getRenderers() {
+    return L;
+  },
+  getTools() {
+    return x;
   }
 };
-let st = 0;
-function rt(n = {
+let lt = 0;
+function ot(s = {
   tools: [],
   content: {},
-  lightboxConstructorArgs: {}
+  photoswipeConstructorArgs: {}
 }) {
-  const t = k(null), i = `composable-lightbox-${++st}`, e = it.getAppInstance();
+  let t = null;
+  const i = `composable-lightbox-${++lt}`, e = nt.getAppInstance();
   if (!e)
     throw new Error("VueComposableLightboxPlugin not installed!");
-  function s(h) {
-    f(), l(h), r();
+  function n(a) {
+    I(), l(a), r();
   }
-  function l(h, p) {
-    const a = S(et, {
+  function l(a) {
+    var h, d, f, C;
+    const o = S(st, {
       id: i,
-      media: h,
-      mediaType: p
+      media: a,
+      config: {
+        srcKey: ((h = s.config) == null ? void 0 : h.srcKey) ?? "original_url",
+        posterKey: ((d = s.config) == null ? void 0 : d.posterKey) ?? "preview_url",
+        defaultHeight: ((f = s.config) == null ? void 0 : f.defaultHeight) ?? 1e3,
+        defaultWidth: ((C = s.config) == null ? void 0 : C.defaultWidth) ?? 1e3
+      }
     });
-    I(
-      a,
+    y(
+      o,
       document.body
     );
   }
   function r() {
-    t.value = new J({
+    t = new tt({
       gallery: "#" + i,
       children: "a",
       padding: {
@@ -858,64 +869,73 @@ function rt(n = {
         right: 100
       },
       clickToCloseNonZoomable: !1,
-      ...n.lightboxConstructorArgs,
-      pswpModule: O
-    }), t.value.init(), d(), c();
-  }
-  function d() {
-    var h;
-    !n || !n.content || (h = t.value) == null || h.on("contentLoad", (p) => {
-      const { content: a } = p;
-      b(() => {
-        Object.entries(n.content).forEach(([u, w]) => {
-          if (a.type !== u)
-            return;
-          p.preventDefault(), document.createElement("div"), a.element.className = "flex justify-center items-center";
-          const m = S(w, {
-            lightbox: t,
-            data: a.data
-          });
-          m.appContext = e._context, I(m, a.element);
-        });
-      });
-    });
+      ...s.photoswipeConstructorArgs,
+      pswpModule: async () => F
+    }), c(), u(), O(), t.init();
   }
   function c() {
-    var h;
-    !n || !n.tools || (h = t.value) == null || h.on("uiRegister", () => {
-      b(() => {
-        const p = document.querySelector(".pswp__top-bar"), a = document.querySelector(".pswp__button--close");
-        if (!p || !a) return;
-        const u = document.createElement("div");
-        p.insertBefore(u, a), n.tools.forEach((w) => {
-          const m = S(w, {
+    t.addFilter("itemData", (a, o) => {
+      var d;
+      if (!((d = a.element) != null && d.dataset))
+        return a;
+      const h = a.element.dataset.pswpData;
+      return h && (a.pswpData = JSON.parse(h)), a;
+    });
+  }
+  function u() {
+    !s || !s.content || (t.on("contentLoad", (a) => {
+      const { content: o } = a, h = s.content[o.type];
+      if (!h) return;
+      a.preventDefault();
+      const d = document.createElement("div");
+      d.className = "relative flex items-center justify-center max-w-full max-h-full", d.style.width = o.width + "px", d.style.height = o.height + "px";
+      const f = S(h, {
+        data: o.data.pswpData
+      });
+      f.appContext = e._context, y(f, d), o.element = d;
+    }), t.on("contentResize", (a) => {
+      const { content: o, width: h, height: d } = a;
+      o.element && (o.element.style.width = h + "px", o.element.style.height = d + "px");
+    }), t.on("contentRemove", (a) => {
+      const { content: o } = a;
+      o.element && y(null, o.element);
+    }));
+  }
+  function O() {
+    !s || !s.tools || t.on("uiRegister", () => {
+      K(() => {
+        const a = document.querySelector(".pswp__top-bar"), o = document.querySelector(".pswp__button--close");
+        if (!a || !o)
+          return;
+        const h = document.createElement("div");
+        a.insertBefore(h, o), s.tools.forEach((d) => {
+          const f = S(d, {
             lightbox: t,
             class: "pswp__button"
           });
-          m.appContext = e._context, I(m, u);
+          f.appContext = e._context, y(f, h);
         });
       });
     });
   }
-  function f() {
-    t.value && (t.value.destroy(), t.value = null);
+  function I() {
+    t && (t.destroy(), t = null);
   }
-  function x(h, p = 0) {
-    var u;
-    const a = N(h);
-    if (!a || Array.isArray(a) && a.length === 0) {
-      console.warn("No media to open", !a, !a.length);
+  function z(a, o = 0) {
+    const h = W(a);
+    if (!h || Array.isArray(h) && h.length === 0) {
+      console.warn("No media to open", !h, !h.length);
       return;
     }
-    s(a), (u = t.value) == null || u.loadAndOpen(p);
+    n(h), t.loadAndOpen(o);
   }
   return $(() => {
-    f();
+    I();
   }), {
-    open: x
+    open: z
   };
 }
 export {
-  it as default,
-  rt as useLightbox
+  nt as default,
+  ot as useLightbox
 };
